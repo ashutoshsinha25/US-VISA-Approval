@@ -1,7 +1,7 @@
 import os 
 from pathlib import Path 
 
-project_name = 'Project1-US Visa'
+project_name = 'US-Visa-Approval'
 
 list_of_files = [
     f"{project_name}/__ini__.py",
