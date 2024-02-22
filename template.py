@@ -51,10 +51,6 @@ list_of_files = [
 for filepath in list_of_files:
     file=Path(filepath)
     filedir, filename = os.path.split(file)
-
-    # print(filedir,'----',filename)
-
-    
     if filedir != "":
         os.makedirs(filedir,exist_ok=True)
     if (not os.path.exists(file)) or (os.path.getsize(file) == 0):
