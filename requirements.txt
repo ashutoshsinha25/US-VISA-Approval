@@ -1,11 +1,25 @@
-Package         Version
---------------- -------
-numpy           1.24.4
-pandas          2.0.3
-pip             24.0
-python-dateutil 2.8.2
-pytz            2024.1
-setuptools      69.1.0
-six             1.16.0
-tzdata          2024.1
-wheel           0.42.0
+ipykernel
+pandas
+numpy
+matplotlib
+plotly
+seaborn
+scipy
+scikit-learn
+imblearn
+xgboost
+catboost
+pymongo
+from_root
+evidently==0.2.8
+dill
+PyYAML
+neuro_mf
+boto3
+mypy-boto3-s3
+botocore
+fastapi
+uvicorn
+jinja2
+python-multipart
+-e .
