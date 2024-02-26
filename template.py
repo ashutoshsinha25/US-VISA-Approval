@@ -1,7 +1,7 @@
 import os 
 from pathlib import Path 
 
-project_name = 'US-Visa-Approval'
+project_name = 'visa_approval'
 
 list_of_files = [
     f"{project_name}/__ini__.py",
@@ -54,6 +54,7 @@ for filepath in list_of_files:
     if filedir != "":
         os.makedirs(filedir,exist_ok=True)
     if (not os.path.exists(file)) or (os.path.getsize(file) == 0):
+        print(f"creating file at; {file}")
         with open(file, 'w') as f:
             pass 
     else:
