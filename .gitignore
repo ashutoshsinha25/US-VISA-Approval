@@ -2,3 +2,7 @@ doc.text
 visa_approval.egg-info
 notebook/Visadataset.csv
 Visadataset.csv
+notebook/mongodb.ipynb
+.env
+notes.txt
+__pycache__
