@@ -29,7 +29,7 @@ def write_yaml_file(file_path : str , content : object , replace : bool = False)
         with open(file_path,'w') as f:
             yaml.dump(content , f)
     except Exception as e:
-        raise USVisaException(e, sys)
+        raise USVisaException(e, sys) from e
     
 
 def load_object(file_path : str) -> None:
