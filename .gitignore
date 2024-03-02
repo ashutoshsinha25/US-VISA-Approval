@@ -2,7 +2,7 @@ doc.text
 visa_approval.egg-info
 notebook/Visadataset.csv
 Visadataset.csv
-notebook/mongodb.ipynb
+# notebook/mongodb.ipynb
 notebook/1_EDA_US_visa.ipynb
 .env
 notes.txt
