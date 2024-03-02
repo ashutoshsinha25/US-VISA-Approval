@@ -28,8 +28,9 @@ def write_yaml_file(file_path : str , content : object , replace : bool = False)
         os.makedirs(os.path.join(file_path) , exist_ok=True)
         with open(file_path,'w') as f:
             yaml.dump(content , f)
+            
     except Exception as e:
-        raise USVisaException(e, sys) from e
+        raise USVisaException(e, sys) from e  
     
 
 def load_object(file_path : str) -> None:
