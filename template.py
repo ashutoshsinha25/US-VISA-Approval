@@ -15,8 +15,12 @@ list_of_files = [
     f"{project_name}/components/model_pusher.py",
 
     f"{project_name}/configuration/__init__.py",
-    f"{project_name}/configuration/model.yaml",
-    f"{project_name}/configuration/schema.yaml",
+    f"{project_name}/configuration/mongodb_connector.py",
+    # f"{project_name}/configuration/model.yaml",
+    # f"{project_name}/configuration/schema.yaml",
+
+    f"{project_name}/data_access/__init__.py",
+    f"{project_name}/data_access/usvisa_data.py",
 
 
     f"{project_name}/constant/__init__.py",
