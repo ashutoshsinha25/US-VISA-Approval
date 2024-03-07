@@ -20,7 +20,7 @@ class USVisaData:
             raise USVisaException(e,sys) from e 
         
     
-    def export_collection_as_fd(self,collection_nm:str, database_nm:Optional[str]=None) -> pd.DataFrame:
+    def export_collection_as_df(self,collection_nm:str, database_nm:Optional[str]=None) -> pd.DataFrame:
         try:
             if database_nm is None:
                 _, db ,_ = self.mongo_client.connection_status()

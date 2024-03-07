@@ -1,9 +1,6 @@
-from visa_approval.configuration.mongodb_connector import MongoDBClient 
+from visa_approval.pipeline.training_pipeline import TrainPipeline 
 
-connector = MongoDBClient()
-c, d ,dnm  = connector.connection_status()
-print(c)
-print(100*'-')
-print(d)
-print(100*'-')
-print(dnm)
+
+pipleline = TrainPipeline() 
+
+pipleline.ru_pipeline()
