@@ -47,8 +47,8 @@ list_of_files = [
     'demo.py',
     'setup.py',
     'notebook/eda.ipynb',
-    # 'config/model.yaml',
-    # 'config/schema.yaml'
+    'config/model.yaml',
+    'config/schema.yaml'
 ]
 
 

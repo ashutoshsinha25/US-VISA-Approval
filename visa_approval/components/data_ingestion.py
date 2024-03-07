@@ -59,7 +59,7 @@ class DataIngestion:
             train.to_csv(self.data_ingestion_config.training_file_path,index=False,header=True)
             test.to_csv(self.data_ingestion_config.testing_file_path,index=False,header=True)
 
-            logging.info("Exported the data to : {self.data_ingestion_config.training_file_path} and {self.data_ingestion_config.testing_file_path}")
+            logging.info(f"Exported the data to : {self.data_ingestion_config.training_file_path} and {self.data_ingestion_config.testing_file_path}")
 
         except Exception as e:
             raise USVisaException(e, sys) from e
