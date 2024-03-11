@@ -1,72 +1,63 @@
-import json 
-import sys 
+import json
+import sys
 
-import pandas as pd 
+import pandas as pd
+from evidently.model_profile import Profile
+from evidently.model_profile.sections import DataDriftProfileSection
+
 from pandas import DataFrame
-from evidently.model_profile import Profile 
-from evidently.model_profile.sections import DataDriftProfileSection 
 
-
-from visa_approval.exception import USVisaException 
-from visa_approval.logger import logging 
+from visa_approval.exception import USVisaException
+from visa_approval.logger import logging
 from visa_approval.utils.main_utils import read_yaml_file, write_yaml_file
-from visa_approval.entity.config_entity import DataIngestionConfig , DataValidationConfig
-from visa_approval.entity.artifact_entity import DataIngestionArtifact , DataValidationArtifact 
+from visa_approval.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact
+from visa_approval.entity.config_entity import DataValidationConfig
 from visa_approval.constant import SCHEMA_FILE_PATH
 
 
-
 class DataValidation:
+    def __init__(self, data_ingestion_artifact: DataIngestionArtifact, data_validation_config: DataValidationConfig):
 
-    def __init__(self, data_ingestion_artifact: DataIngestionArtifact ,
-                 data_validation_config: DataValidationConfig ) -> None:
-        
-        
+
         try:
-            self.data_ingestion_artifact = data_ingestion_artifact 
+            self.data_ingestion_artifact = data_ingestion_artifact
             self.data_validation_config = data_validation_config
-            self._schema_config = read_yaml_file(file_path=SCHEMA_FILE_PATH)
+            self._schema_config =read_yaml_file(file_path=SCHEMA_FILE_PATH)
         except Exception as e:
-            raise USVisaException(e, sys) from e 
-        
+            raise USVisaException(e,sys)
 
-    def validate_number_of_columns(self, df:DataFrame) -> bool:
-
+    def validate_number_of_columns(self, dataframe: DataFrame) -> bool:
 
         try:
-            status = len(df.columns) == len(self._schema_config['columns'])
-            logging.info(f"All Columns present : {status}")
-            return status 
+            status = len(dataframe.columns) == len(self._schema_config["columns"])
+            logging.info(f"Is required column present: [{status}]")
+            return status
+        except Exception as e:
+            raise USVisaException(e, sys)
+
+    def is_column_exist(self, df: DataFrame) -> bool:
+
+        try:
+            dataframe_columns = df.columns
+            missing_numerical_columns = []
+            missing_categorical_columns = []
+            for column in self._schema_config["numerical_columns"]:
+                if column not in dataframe_columns:
+                    missing_numerical_columns.append(column)
+
+            if len(missing_numerical_columns)>0:
+                logging.info(f"Missing numerical column: {missing_numerical_columns}")
+
+            for column in self._schema_config["categorical_columns"]:
+                if column not in dataframe_columns:
+                    missing_categorical_columns.append(column)
+
+            if len(missing_categorical_columns)>0:
+                logging.info(f"Missing categorical column: {missing_categorical_columns}")
+
+            return False if len(missing_categorical_columns)>0 or len(missing_numerical_columns)>0 else True
         except Exception as e:
             raise USVisaException(e, sys) from e
-        
-
-    def is_column_exists(self, df : DataFrame) -> bool:
-
-
-        try:
-            df_cols = df.columns 
-            missing_num_cols = [] 
-            missing_cat_cols = [] 
-
-            for col in self._schema_config['numerical_columns']:
-                if col not in df_cols:
-                    missing_num_cols.append(col)
-            for col in self._schema_config['categorical_columns']:
-                if col not in df_cols:
-                    missing_cat_cols.append(col)
-
-            if len(missing_num_cols) > 0:
-                logging.info(f"Missing num cols : {missing_num_cols}")
-            
-            if len(missing_cat_cols) > 0:
-                logging.info(f"Missing cat cols : {missing_cat_cols}")
-
-            return False if len(missing_num_cols) > 0 or len(missing_cat_cols) else True 
-        except Exception as e:
-            raise USVisaException(e, sys) from e 
-        
-
 
     @staticmethod
     def read_data(file_path) -> DataFrame:
@@ -74,83 +65,65 @@ class DataValidation:
             return pd.read_csv(file_path)
         except Exception as e:
             raise USVisaException(e, sys)
-        
 
-    
-    def detect_dataset_drift(self, ref_df: DataFrame , curr_df : DataFrame) -> bool :
-
+    def detect_dataset_drift(self, reference_df: DataFrame, current_df: DataFrame, ) -> bool:
 
         try:
             data_drift_profile = Profile(sections=[DataDriftProfileSection()])
-            data_drift_profile.calculate(ref_df,  curr_df )
-
-            report = data_drift_profile.json() 
+            data_drift_profile.calculate(reference_df, current_df)
+            report = data_drift_profile.json()
             json_report = json.loads(report)
-            
-            write_yaml_file(file_path = self.data_validation_config.drift_report_file_path , content= json_report)
-            
-            n_features = json_report['data_drift']['data']["metrics"]['n_features']
-            n_drifted_features = json_report['data_drift']['data']["metrics"]['n_drifted_features']
-
-            logging.info(f"{n_drifted_features}/{n_features} drifts were detected")
-            drift_status = json_report['data_drift']['data']['metrics']['dataset_drift']
-            return drift_status 
+            write_yaml_file(file_path=self.data_validation_config.drift_report_file_path, content=json_report)
+            n_features = json_report["data_drift"]["data"]["metrics"]["n_features"]
+            n_drifted_features = json_report["data_drift"]["data"]["metrics"]["n_drifted_features"]
+            logging.info(f"{n_drifted_features}/{n_features} drift detected.")
+            drift_status = json_report["data_drift"]["data"]["metrics"]["dataset_drift"]
+            return drift_status
         except Exception as e:
-            raise USVisaException(e, sys) from e 
-        
+            raise USVisaException(e, sys) from e
 
-    
     def initiate_data_validation(self) -> DataValidationArtifact:
 
 
         try:
-            validation_error_msg = "" 
-            logging.info("Starting data validation ")
+            validation_error_msg = ""
+            logging.info("Starting data validation")
+            train_df, test_df = (DataValidation.read_data(file_path=self.data_ingestion_artifact.trained_file_path),
+                                 DataValidation.read_data(file_path=self.data_ingestion_artifact.test_file_path))
 
-            train, test = (DataValidation.read_data(file_path=self.data_ingestion_artifact.trained_file_path),
-                           DataValidation.read_data(file_path=self.data_ingestion_artifact.test_file_path))
-            
-            status = self.validate_number_of_columns(df=train )
-            logging.info(f"required cols present in training df : {status}")
-            if not status :
-                validation_error_msg += f"Cols are missing in training data"
-        
-            status = self.validate_number_of_columns(df = test)
-            logging.info(f"required cols present in testing df : {status}")
-            if not status :
-                validation_error_msg += f"Cols are missing in testing data"
-
-            status = self.is_column_exists(df=train)
-            if not status :
-                validation_error_msg += f"Cols are missing in traning data"
-            
-            status = self.is_column_exists(df=test)
+            status = self.validate_number_of_columns(dataframe=train_df)
+            logging.info(f"All required columns present in training dataframe: {status}")
             if not status:
-                validation_error_msg += f"Cols are missing in testing data"
+                validation_error_msg += f"Columns are missing in training dataframe."
+            status = self.validate_number_of_columns(dataframe=test_df)
 
-            
-            validataion_status = len(validation_error_msg) == 0
-            if validataion_status:
-                drift_status = self.detect_dataset_drift(train, test)
+            logging.info(f"All required columns present in testing dataframe: {status}")
+            if not status:
+                validation_error_msg += f"Columns are missing in test dataframe."
+            status = self.is_column_exist(df=train_df)
+            if not status:
+                validation_error_msg += f"Columns are missing in training dataframe."
+            status = self.is_column_exist(df=test_df)
+            if not status:
+                validation_error_msg += f"columns are missing in test dataframe."
+            validation_status = len(validation_error_msg) == 0
+            if validation_status:
+                drift_status = self.detect_dataset_drift(train_df, test_df)
                 if drift_status:
-                    logging.info("Drift detected")
-                    validation_error_msg = 'Drift detected'
+                    logging.info(f"Drift detected.")
+                    validation_error_msg = "Drift detected"
                 else:
-                    validation_error_msg = 'Drift not detected'
+                    validation_error_msg = "Drift not detected"
             else:
-                logging.info(f"Validation error : {validation_error_msg}")
-
-
-            
-
+                logging.info(f"Validation_error: {validation_error_msg}")
+                
             data_validation_artifact = DataValidationArtifact(
-                validation_status=validataion_status,
+                validation_status=validation_status,
                 message=validation_error_msg,
                 drift_report_file_path=self.data_validation_config.drift_report_file_path
             )
 
-
-            logging.info(f"Data validation artifact : {data_validation_artifact}")
-            return data_validation_artifact 
+            logging.info(f"Data validation artifact: {data_validation_artifact}")
+            return data_validation_artifact
         except Exception as e:
-            raise  USVisaException(e, sys) from e 
+            raise USVisaException(e, sys) from e
