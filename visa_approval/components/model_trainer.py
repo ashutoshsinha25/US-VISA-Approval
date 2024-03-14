@@ -35,7 +35,7 @@ class ModelTrainer:
             best_model_details = model_factory.get_best_model(
                 X=X_train,y=y_train, base_accuracy=self.model_trainer_config.expected_accuracy
             )   
-            model_obj = best_model_details.best_model()
+            model_obj = best_model_details.best_model
 
             y_pred = model_obj.predict(X_test)
 
