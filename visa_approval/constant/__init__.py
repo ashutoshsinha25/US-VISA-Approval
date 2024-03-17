@@ -8,6 +8,9 @@ from datetime import date
 DATABASE_NAME = "US_VISA"
 COLLECTION_NAME = "VISA_DATA"
 MONGODB_URL_KEY = os.environ.get('MONGO_CONNECTION_STR')
+ACCESS_KEY = os.environ.get('KEY')
+SECRET_KEY = os.environ.get('SECRET')
+REGION_NAME = "us-east-1"
 
 PIPELINE_NAME : str = 'USVISA'
 ARTIFACT_DIR : str = "artifact"
@@ -64,3 +67,12 @@ MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
 MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
 MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
 MODEL_TRAINER_MODEL_CONFIG_FILE_PATH: str = os.path.join("config", "model.yaml")
+
+
+
+"""
+MODEL EVALUATION related constant start with MODEL_EVALUATION var name
+"""
+MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.02
+MODEL_BUCKET_NAME = "usvisa-modelv0"
+MODEL_PUSHER_S3_KEY = "model-registry"
