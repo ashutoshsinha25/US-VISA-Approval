@@ -17,3 +17,16 @@ conda activate visa
 pip install -r requirements.txt
 ```
 
+
+## Task To Complete:-
+
+- [x] Data Ingestion
+- [x] Data Trasformation
+- [x] Data Validation
+- [x] Model Trainer
+- [x] Model Evaluation
+- [x] Model Pusher
+- [] Prepidcion Pipeline 
+- [] FE form to get the input from user 
+- [] FastAPI BE to call/run components 
+- [] Deploy in Cloud
