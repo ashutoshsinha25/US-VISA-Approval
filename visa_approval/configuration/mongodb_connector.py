@@ -24,7 +24,7 @@ class MongoDBClient:
             if MongoDBClient.client is None:
                 mongodb_url = MONGODB_URL_KEY
                 if mongodb_url is None:
-                    raise Exception("Env key : MONGODB_URL_KEY is not correct.")
+                    raise Exception(f"Env key : {MONGODB_URL_KEY} is not correct.")
                 MongoDBClient.client = pymongo.MongoClient(mongodb_url , tlsCAFile=ca)
             
             self.client=MongoDBClient.client 
