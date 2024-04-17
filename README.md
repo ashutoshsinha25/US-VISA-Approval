@@ -26,7 +26,6 @@ pip install -r requirements.txt
 - [x] Model Trainer
 - [x] Model Evaluation
 - [x] Model Pusher
-- [ ] Prepidcion Pipeline 
-- [ ] FE form to get the input from user 
-- [ ] FastAPI BE to call/run components 
+- [ ] Prediction Pipeline 
+- [ ] Streamlit application for user interation
 - [ ] Deploy in Cloud
