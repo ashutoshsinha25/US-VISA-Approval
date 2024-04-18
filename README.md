@@ -1,7 +1,7 @@
 # US Visa Approval 
 
 **Problem Statement:**
-Your task is to leverage this dataset to build a machine learning model that can predict visa approvals based on the provided information. This model can be used to streamline the application process for both immigration authorities and potential employers.
+Build a machine learning model that can predict visa approvals based on the provided information. Model can be used to streamline the application process for both immigration authorities and potential employers.
 
 This repository contains an End-to-End implementation for predicting visa approvals for foreign workers in the US. The data at hand; provides features about both the applicant and the offered job, allowing you to build models to automate the approval process.
 `DataSet` : [link](https://www.kaggle.com/datasets/moro23/easyvisa-dataset)
