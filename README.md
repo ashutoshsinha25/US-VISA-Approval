@@ -1,11 +1,15 @@
 # US Visa Approval 
 
 **Problem Statement:**
+
 Build a machine learning model that can predict visa approvals based on the provided information. Model can be used to streamline the application process for both immigration authorities and potential employers.
 
 This repository contains an End-to-End implementation for predicting visa approvals for foreign workers in the US. The data at hand; provides features about both the applicant and the offered job, allowing you to build models to automate the approval process.
 `DataSet` : [link](https://www.kaggle.com/datasets/moro23/easyvisa-dataset)
+
+
 **Data Summary:**
+
 * **Applicant Information:**
     * `case_id`: Unique identifier for each visa application (categorical).
     * `continent`: Continent of origin for the applicant (categorical).
