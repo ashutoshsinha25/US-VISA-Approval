@@ -22,4 +22,11 @@ fastapi
 uvicorn
 jinja2
 python-multipart
+openai
+tiktoken 
+chromadb
+langchain
+streamlit
+GitPython
+python-dotenv
 -e .
