@@ -1,8 +1,6 @@
 doc.text
 visa_approval.egg-info
-notebook/Visadataset.csv
 notebook/catboost_info
-Visadataset.csv
 .env
 notes.txt
 __pycache__
