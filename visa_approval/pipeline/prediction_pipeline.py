@@ -7,9 +7,8 @@ from pandas import DataFrame
 
 from visa_approval.entity.config_entity import USVisaPredictorConfig 
 from visa_approval.entity.s3_estimator import USVisaEstimator 
-from visa_approval.exception import USVisaEstimator 
+from visa_approval.exception import USVisaException 
 from visa_approval.logger import logging 
-from visa_approval.utils.main_utils import read_yaml_file 
 
 
 class USVisaData:
@@ -39,7 +38,7 @@ class USVisaData:
             self.company_age = company_age 
 
         except Exception as e:
-            raise USVisaData(e, sys) from e 
+            raise USVisaException(e, sys) from e 
         
     
     def get_visa_data_dict(self):
@@ -62,7 +61,7 @@ class USVisaData:
             logging.info("Exited get_visa_data_dict method as USVisaData class")
             return input_data 
         except Exception as e:
-            raise USVisaData(e, sys) from e 
+            raise USVisaException(e, sys) from e 
 
 
     def get_visa_input_df(self) -> DataFrame :
@@ -72,7 +71,7 @@ class USVisaData:
             visa_dict = self.get_visa_data_dict()
             return DataFrame(visa_dict)
         except Exception as e:
-            raise USVisaData(e, sys) from e
+            raise USVisaException(e, sys) from e
         
     
 
@@ -83,12 +82,8 @@ class USVisaClassifier:
         try:
             self.prediction_pipeline_config = prediction_pipeline_config
         except Exception as e:
-            raise USVisaClassifier(e, sys) from e 
-        
-        
-        
-        
-        
+            raise USVisaException(e, sys) from e 
+
     def predict(self, df ) -> DataFrame :
         try:
             logging.info("entered predict method of USVisaClassifer class")
@@ -100,4 +95,4 @@ class USVisaClassifier:
             return result   
         
         except Exception as e:
-            raise USVisaClassifier(e, sys) from e 
+            raise USVisaException(e, sys) from e 
