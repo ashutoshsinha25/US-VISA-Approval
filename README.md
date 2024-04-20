@@ -51,8 +51,8 @@ pip install -r requirements.txt
 - [x] Model Trainer
 - [x] Model Evaluation
 - [x] Model Pusher
-- [ ] Prediction Pipeline 
+- [x] Prediction Pipeline 
 - [ ] Source code analysis with LLM
-- [ ] Integrate with the main prediction pipeline
-- [ ] Streamlit application for user interation
+- [x] Integrate with the main prediction pipeline
+- [x] Streamlit application for user interation
 - [ ] Deploy in Cloud
